@@ -11,9 +11,6 @@ from transformers import *
 # 1. Chargement et aperçu du dataset
 # -------------------------------
 # Remplacer le chemin si nécessaire
-
-
-
 # -------------------------------
 # 2. Identification des colonnes spectrales et de la colonne d'espèce
 # -------------------------------
@@ -27,9 +24,6 @@ df = pd.read_csv(data_path)
 # -------------------------------
 # On suppose que la colonne d'espèce s'appelle 'species'. 
 # Si ce n'est pas le cas, modifiez la variable ci-dessous.
-
-
-
 # Les colonnes spectrales sont toutes les colonnes sauf celle de l'espèce
 
 species_col = 'class'
@@ -167,7 +161,7 @@ plt.show()
 for mat in list_mats:
     # 3.4 Calcul et tracé de la première dérivée des courbes moyennes par espèce
     plt.figure(figsize=(10,6))
-    # Paramètres du filtre Savitzky-Golay (à ajuster selon votre résolution)
+    # meow
     window_length = 7  # doit être impair
     polyorder = 2
     for species in unique_species:
