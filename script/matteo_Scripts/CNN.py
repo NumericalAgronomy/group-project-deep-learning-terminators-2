@@ -2,7 +2,15 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from analysis_transformed import (
+    data_snv,
+    data_smother,
+    data_deriv1,
+    data_deriv2,
+    data_snv_transf,
+    data_snv_deriv1,
+    data_snv_deriv2
+)
 import torch
 import torch.nn as nn
 import torch.optim as optim

@@ -16,7 +16,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 # ================================
 
 # Charger les données
-data_src = "data/combined_data.csv"
+data_src = r'Data\combined_data.csv'
 data = pd.read_csv(data_src)
 
 # On considère que la dernière colonne est la cible

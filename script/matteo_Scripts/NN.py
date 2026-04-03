@@ -7,7 +7,15 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
-
+from dataLoading import (
+    data_snv,
+    data_smother,
+    data_deriv1,
+    data_deriv2,
+    data_snv_transf,
+    data_snv_deriv1,
+    data_snv_deriv2
+)
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
@@ -16,9 +24,9 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 # ================================
 
 # Charger les données
-data_src = r'Data\combined_data.csv'
-data = pd.read_csv(data_src)
-
+data_src = "data/combined_data.csv"
+#data = pd.read_csv(data_src)
+data = data_deriv1
 # On considère que la dernière colonne est la cible
 target_col = data.columns[-1]
 
@@ -88,8 +96,8 @@ plt.show()
 # ================================
 
 # Paramètres d'entraînement
-batch_size = 32
-num_epochs = 100
+batch_size =32
+num_epochs = 1000
 learning_rate = 0.001
 
 # Conversion des données en tenseurs
@@ -111,6 +119,7 @@ class NeuralNet(nn.Module):
         self.fc2 = nn.Linear(hidden_dim1, hidden_dim2)
         self.relu2 = nn.ReLU()
         self.fc3 = nn.Linear(hidden_dim2, output_dim)
+        
     
     def forward(self, x):
         x = self.fc1(x)
