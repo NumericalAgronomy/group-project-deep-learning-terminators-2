@@ -48,7 +48,7 @@ validation_data = pd.concat(validation_frames)
 
 # Jeu d'entraînement = données restantes
 training_data = data.drop(validation_data.index)
-
+#test
 # Séparation en features et cible pour entraînement et validation
 X_train = training_data.drop(columns=[target_col])
 y_train = training_data[target_col]
