@@ -16,7 +16,7 @@ from imblearn.over_sampling import RandomOverSampler
 # 1. Chargement et préparation des données
 # ================================
 
-data_src = r'Data\combined_data.csv'
+data_src = "data/combined_data.csv"
 data = pd.read_csv(data_src)
 
 # On considère que la dernière colonne est la cible

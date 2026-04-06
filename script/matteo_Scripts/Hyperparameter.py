@@ -7,7 +7,15 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
-
+from dataLoading import (
+    data_snv,
+    data_smother,
+    data_deriv1,
+    data_deriv2,
+    data_snv_transf,
+    data_snv_deriv1,
+    data_snv_deriv2
+)
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
@@ -17,7 +25,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 # Charger les données
 data_src = r'Data\combined_data.csv'
-data = pd.read_csv(data_src)
+data = data_deriv1
 
 # On considère que la dernière colonne est la cible
 target_col = data.columns[-1]
@@ -32,9 +40,9 @@ validation_frames = []
 for specie in data[target_col].unique():
     specie_df = data[data[target_col] == specie]
     if len(specie_df) >= 6:
-        val_specie = specie_df.sample(n=6, random_state=42)
+        val_specie = specie_df.sample(n=7, random_state=42)
     else:
-        val_specie = specie_df.sample(n=6, replace=True, random_state=42)
+        val_specie = specie_df.sample(n=7, replace=True, random_state=42)
     validation_frames.append(val_specie)
 validation_data = pd.concat(validation_frames)
 

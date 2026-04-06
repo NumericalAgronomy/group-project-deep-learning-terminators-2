@@ -40,9 +40,9 @@ validation_frames = []
 for specie in data[target_col].unique():
     specie_df = data[data[target_col] == specie]
     if len(specie_df) >= 6:
-        val_specie = specie_df.sample(n=6, random_state=42)
+        val_specie = specie_df.sample(n=7, random_state=14)
     else:
-        val_specie = specie_df.sample(n=6, replace=True, random_state=42)
+        val_specie = specie_df.sample(n=7, replace=True, random_state=14)
     validation_frames.append(val_specie)
 validation_data = pd.concat(validation_frames)
 
@@ -96,9 +96,9 @@ plt.show()
 # ================================
 
 # Paramètres d'entraînement
-batch_size =32
-num_epochs = 1000
-learning_rate = 0.001
+batch_size =16
+num_epochs = 10
+learning_rate = 0.005
 
 # Conversion des données en tenseurs
 X_train_tensor = torch.tensor(X_train_scaled, dtype=torch.float32)
@@ -112,7 +112,7 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
 # Définition du modèle de réseau de neurones
 class NeuralNet(nn.Module):
-    def __init__(self, input_dim, hidden_dim1=64, hidden_dim2=32, output_dim=n_classes):
+    def __init__(self, input_dim, hidden_dim1=64, hidden_dim2=64, output_dim=n_classes):
         super(NeuralNet, self).__init__()
         self.fc1 = nn.Linear(input_dim, hidden_dim1)
         self.relu1 = nn.ReLU()
@@ -125,7 +125,7 @@ class NeuralNet(nn.Module):
         x = self.fc1(x)
         x = self.relu1(x)
         x = self.fc2(x)
-        x = self.relu2(x)
+        x = self.relu2(x) 
         x = self.fc3(x)
         return x
 

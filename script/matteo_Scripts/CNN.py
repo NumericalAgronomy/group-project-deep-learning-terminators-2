@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from analysis_transformed import (
+from dataLoading import (
     data_snv,
     data_smother,
     data_deriv1,
@@ -25,12 +25,12 @@ from imblearn.over_sampling import RandomOverSampler  # ajout pour l'oversamplin
 # ------------------------------
 hp = {
     "lr": 0.005,             # mise à jour : learning rate
-    "batch_size": 64,        # mise à jour : taille de lot
-    "num_epochs": 100,       # inchangé
-    "dropout_rate": 0.0,     # mise à jour : pas de dropout
-    "weight_decay": 0.01     # mise à jour : régularisation L2
+    "batch_size": 16,        # mise à jour : taille de lot
+    "num_epochs": 500,       # inchangé
+    "dropout_rate": 0.4,     # mise à jour : pas de dropout
+    "weight_decay": 0.00     # mise à jour : régularisation L2
 }
-apply_pretreatment = True  # Flag pour activer le prétraitement (SNV)
+apply_pretreatment = False  # Flag pour activer le prétraitement (SNV)
 
 def snv(X):
     """Application de la transformation SNV (ligne par ligne)."""
@@ -54,7 +54,8 @@ def oversample_data(X, y):
 # 1. Chargement et préparation des données
 # ------------------------------
 data_src = "data/combined_data.csv"
-data = pd.read_csv(data_src)
+#data = pd.read_csv(data_src)
+data = data_deriv1
 target_col = data.columns[-1]
 
 # Encodage de la cible
@@ -120,12 +121,12 @@ num_features = X_train_tensor.shape[2]
 class CNN(nn.Module):
     def __init__(self, num_features, num_classes, dropout_rate):
         super(CNN, self).__init__()
-        self.conv1 = nn.Conv1d(in_channels=1, out_channels=16, kernel_size=3, padding=1)
+        self.conv1 = nn.Conv1d(in_channels=1, out_channels=64, kernel_size=3, padding=1)
         self.relu = nn.ReLU()
-        self.conv2 = nn.Conv1d(in_channels=16, out_channels=32, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv1d(in_channels=64, out_channels=64, kernel_size=3, padding=1)
         self.global_pool = nn.AdaptiveMaxPool1d(1)  # Réduit à (batch, 32, 1)
         self.dropout = nn.Dropout(dropout_rate)
-        self.fc = nn.Linear(32, num_classes)
+        self.fc = nn.Linear(64, num_classes)
         
     def forward(self, x):
         # x: (batch_size, 1, num_features)
