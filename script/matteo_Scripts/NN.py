@@ -26,7 +26,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 # Charger les données
 data_src = "data/combined_data.csv"
 #data = pd.read_csv(data_src)
-data = data_deriv1
+data = data_snv
 # On considère que la dernière colonne est la cible
 target_col = data.columns[-1]
 
@@ -96,9 +96,15 @@ plt.show()
 # ================================
 
 # Paramètres d'entraînement
+<<<<<<< HEAD
 batch_size =16
 num_epochs = 10
 learning_rate = 0.005
+=======
+batch_size =32
+num_epochs = 100
+learning_rate = 0.001
+>>>>>>> cf9e28b77ec569e9d726c5daf194e7617a8761b7
 
 # Conversion des données en tenseurs
 X_train_tensor = torch.tensor(X_train_scaled, dtype=torch.float32)

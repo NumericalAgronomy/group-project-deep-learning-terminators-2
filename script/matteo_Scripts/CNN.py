@@ -27,8 +27,13 @@ hp = {
     "lr": 0.005,             # mise à jour : learning rate
     "batch_size": 16,        # mise à jour : taille de lot
     "num_epochs": 100,       # inchangé
+<<<<<<< HEAD
     "dropout_rate": 0.3,     # mise à jour : pas de dropout
     "weight_decay": 0.001     # mise à jour : régularisation L2
+=======
+    "dropout_rate": 0.4,     # mise à jour : pas de dropout
+    "weight_decay": 0.01     # mise à jour : régularisation L2
+>>>>>>> cf9e28b77ec569e9d726c5daf194e7617a8761b7
 }
 apply_pretreatment = False  # Flag pour activer le prétraitement (SNV)
 
@@ -54,7 +59,10 @@ def oversample_data(X, y):
 # 1. Chargement et préparation des données
 # ------------------------------
 data_src = "data/combined_data.csv"
+<<<<<<< HEAD
 #data = pd.read_csv(data_src)
+=======
+>>>>>>> cf9e28b77ec569e9d726c5daf194e7617a8761b7
 data = data_deriv1
 target_col = data.columns[-1]
 
