@@ -26,7 +26,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 # Charger les données
 data_src = "data/combined_data.csv"
 #data = pd.read_csv(data_src)
-data = data_deriv1
+data = data_snv
 # On considère que la dernière colonne est la cible
 target_col = data.columns[-1]
 
@@ -97,7 +97,7 @@ plt.show()
 
 # Paramètres d'entraînement
 batch_size =32
-num_epochs = 1000
+num_epochs = 100
 learning_rate = 0.001
 
 # Conversion des données en tenseurs

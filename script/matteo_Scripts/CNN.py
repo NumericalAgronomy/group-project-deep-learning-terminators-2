@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from analysis_transformed import (
+from dataLoading import (
     data_snv,
     data_smother,
     data_deriv1,
@@ -27,10 +27,10 @@ hp = {
     "lr": 0.005,             # mise à jour : learning rate
     "batch_size": 64,        # mise à jour : taille de lot
     "num_epochs": 100,       # inchangé
-    "dropout_rate": 0.0,     # mise à jour : pas de dropout
+    "dropout_rate": 0.4,     # mise à jour : pas de dropout
     "weight_decay": 0.01     # mise à jour : régularisation L2
 }
-apply_pretreatment = True  # Flag pour activer le prétraitement (SNV)
+apply_pretreatment = False  # Flag pour activer le prétraitement (SNV)
 
 def snv(X):
     """Application de la transformation SNV (ligne par ligne)."""
@@ -54,7 +54,7 @@ def oversample_data(X, y):
 # 1. Chargement et préparation des données
 # ------------------------------
 data_src = "data/combined_data.csv"
-data = pd.read_csv(data_src)
+data = data_deriv1
 target_col = data.columns[-1]
 
 # Encodage de la cible
