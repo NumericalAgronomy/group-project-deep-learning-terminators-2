@@ -1,5 +1,4 @@
 
-from dataLoading import data_snv, data_smother, data_deriv1, data_deriv2, data_snv_transf, data_snv_deriv1,data_snv_deriv2
 import pandas as pd
 from sklearn.metrics import balanced_accuracy_score, accuracy_score, confusion_matrix,classification_report
 from sklearn.model_selection import GridSearchCV
@@ -11,6 +10,7 @@ from scipy.signal import savgol_filter
 import statistics
 from sklearn.manifold import MDS
 from sklearn.metrics import pairwise_distances
+from sklearn.metrics import ConfusionMatrixDisplay
 data_path = 'data/combined_data.csv'
 df = pd.read_csv(data_path)
 #df = data_deriv2
@@ -102,7 +102,7 @@ for i in range(0, 50):
 print(statistics.mean(outputForet))
 # Display confusion matrix and classification report
 cm = confusion_matrix(y_test_num_classe, rf_classification_y_pred)
-from sklearn.metrics import ConfusionMatrixDisplay
+
 labels = np.unique(np.concatenate([y_test_num_classe.values, rf_classification_y_pred]))
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
 fig, ax = plt.subplots(figsize=(6, 6))
@@ -141,7 +141,7 @@ feuilles = model.apply(X_train)
 dissimilarity_matrix = pairwise_distances(feuilles, metric='hamming')
 
 # Application du Mds
-mds = MDS(n_components=2, metric='precomputed', random_state=42,init=classical_mds)
+mds = MDS(n_components=2, metric='precomputed', random_state=42,init='classical_mds',n_init=1)
 coordonnees_2d = mds.fit_transform(dissimilarity_matrix)
 
 # graph
