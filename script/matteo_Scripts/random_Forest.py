@@ -11,16 +11,38 @@ import statistics
 from sklearn.manifold import MDS
 from sklearn.metrics import pairwise_distances
 from sklearn.metrics import ConfusionMatrixDisplay
+# j'ai piqué ça sur https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters pour avoir une barre de progression :3
+def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    # Print New Line on Complete
+    if iteration == total: 
+        print()
+
+#importation des données
 data_path = 'data/combined_data.csv'
 df = pd.read_csv(data_path)
-#df = data_deriv2
-
 species_col = 'class'
 if species_col not in df.columns:
     print(f"La colonne '{species_col}' n'a pas été trouvée. " \
           "Veuillez modifier le nom de la colonne correspondant aux espèces.")
     species_col = df.columns[-1]  # On suppose ici que c'est la dernière colonne
 target_col = df.columns[-1]
+nom_plantes = df[target_col].unique()
 spectral_columns = [col for col in df.columns if col != species_col]
 spectra = df[spectral_columns].values
 le = LabelEncoder()
@@ -36,7 +58,7 @@ for specie in df[species_col].unique():
     if len(specie_df) >= 6:
         val_specie = specie_df.sample(n=7, random_state=36)
     else:
-        val_specie = specie_df.sample(n=5, replace=True, random_state=15)
+        val_specie = specie_df.sample(n=8, replace=True, random_state=15)
     validation_frames.append(val_specie)
 
 
@@ -71,10 +93,7 @@ param_grid = {
 }
 
 model = RandomForestClassifier()
-
-grid_search = GridSearchCV(
-    model, param_grid, cv=cv_folds, scoring="accuracy", n_jobs=-1
-)
+grid_search = GridSearchCV(model, param_grid, cv=cv_folds, scoring="accuracy", n_jobs=-1)
 
 grid_search.fit(X_train, y_train_num_classe)
 
@@ -85,28 +104,26 @@ rf_classification_best_param = grid_search.best_params_
 print(f"Best score: {rf_classification_best_score} for {rf_classification_best_param}")
 
 # On plot la matrice de confusion
-outputForet = [0]*50
-for i in range(0, 50):
-    model = RandomForestClassifier(**rf_classification_best_param)
+outputForet = [0]*10
+printProgressBar(0, len(outputForet), prefix = 'Forets Aléatoires:', suffix = 'fini', length = 50)
+for i in range(0, 10):
+    model = RandomForestClassifier(**rf_classification_best_param,random_state=50*i^2)
     model.fit(X_train, y_train_num_classe)
     # Use the model to predict the test set
     rf_classification_y_pred = model.predict(X_test)
     # Print the accuracy of the model
-    print("Accuracy on test: ", accuracy_score(y_test_num_classe, rf_classification_y_pred))
-    print("Balanced Accuracy on test: ", balanced_accuracy_score(y_test_num_classe, rf_classification_y_pred))
-    #outputForet.append(accuracy_score(y_test_num_classe, rf_classification_y_pred))
-    outputForet[i]=(accuracy_score(y_test_num_classe, rf_classification_y_pred))
-    print(statistics.mean(outputForet))
-    print(i)
-
-print(statistics.mean(outputForet))
+    #print("Accuracy on test: ", accuracy_score(y_test_num_classe, rf_classification_y_pred))#affiche la précision de cette itération
+    outputForet[i]=(accuracy_score(y_test_num_classe, rf_classification_y_pred))#ajoute a la liste la derniere sortie en date
+    #print(statistics.mean(outputForet))#print de la moyenne de la liste qu'on à crée plus haut
+    printProgressBar(i + 1, len(outputForet), prefix = f'Forets Aléatoires({i}/{len(outputForet)}):', suffix = 'fini', length = 50)
+print(f"\n\nMoyenne de la précision : {round(statistics.mean(outputForet),3)} au bout de {i} forêts avec {round(len(X_train)/n_classes-3,0)} observations par classes")
 # Display confusion matrix and classification report
 cm = confusion_matrix(y_test_num_classe, rf_classification_y_pred)
 
 labels = np.unique(np.concatenate([y_test_num_classe.values, rf_classification_y_pred]))
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=nom_plantes)
 fig, ax = plt.subplots(figsize=(6, 6))
-disp.plot(cmap='Greens', ax=ax, values_format='d')
+disp.plot(cmap='Greens', ax=ax, values_format='d',xticks_rotation=90)
 ax.set_title("Confusion matrix - RandomForestClassifier")
 plt.show()
 
@@ -126,7 +143,7 @@ selected_wavelengths = spectral_columns[::step_size]
 selected_importances = model.feature_importances_[::step_size]
 plt.figure(figsize=(14, 6)) 
 plt.title(f"Feature's importance (Sampled every {step_size}th Wavelength)")
-plt.bar(selected_wavelengths, selected_importances, align="center")
+plt.bar(selected_wavelengths, selected_importances, align="center",color="Green")
 plt.xlabel("Wavelength (Features)")
 plt.ylabel("Importance Score")
 
